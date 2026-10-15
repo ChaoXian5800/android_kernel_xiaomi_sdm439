@@ -26,15 +26,19 @@ jobs:
             libxml2-utils lzop pngcrush rsync schedtool \
             squashfs-tools xsltproc zip zlib1g-dev python3
 
-      - name: Pre-fetch clang toolchain
+      - name: Pre-fetch toolchains
         run: |
-          # kramel.sh 会从 android.googlesource.com 下载 clang-r416183b，
-          # 但该文件已被移除（404）。这里改用 GitHub 镜像提前准备好，
-          # 脚本检测到 clang 目录存在就会跳过下载。
           git clone --depth=1 \
             https://github.com/crdroidandroid/android_prebuilts_clang_host_linux-x86_clang-r416183b \
             -b 11.0 clang
+          git clone --depth=1 \
+            https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 \
+            -b lineage-19.1 arm64
+          git clone --depth=1 \
+            https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 \
+            -b lineage-19.1 arm
           ./clang/bin/clang --version
+          ./arm64/bin/aarch64-linux-android-gcc --version | head -1
 
       - name: Workaround CI environment
         run: |
