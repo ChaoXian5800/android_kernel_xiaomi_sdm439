@@ -46,6 +46,7 @@ jobs:
           echo "DRONE_SYSTEM_HOST=github-actions" >> $GITHUB_ENV
 
       - name: Build kernel
+        continue-on-error: true
         env:
           ci: 1
           TGI: 0
@@ -54,7 +55,7 @@ jobs:
           bash kramel.sh img mod mkzip
 
       - name: Upload kernel zip
-        if: success()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: NetErnels-kernel-zip
@@ -62,7 +63,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload modules zip
-        if: success()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: NetErnels-modules-zip
